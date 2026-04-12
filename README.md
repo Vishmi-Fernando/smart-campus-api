@@ -134,3 +134,61 @@ In this implementation:
 Even though the response may differ (e.g., "Room not found"), the overall state of the system remains unchanged after the initial deletion. This satisfies the definition of idempotency.
 
 Idempotency is important for reliability, as it allows clients to safely retry requests without causing unintended side effects or inconsistencies in the system.
+
+
+### Answer for Part 3 Question 1 - Content-Type Handling in JAX-RS
+
+In this implementation, the POST endpoint for creating a sensor explicitly uses the annotation:
+
+@Consumes(MediaType.APPLICATION_JSON)
+
+This indicates that the resource method only accepts request bodies formatted as JSON. When a client sends a request, JAX-RS inspects the `Content-Type` header to determine whether the incoming data matches the expected format.
+
+If a client attempts to send data in a different format, such as `text/plain` or `application/xml`, JAX-RS will not be able to find a suitable message body reader to convert the request into a Java object. As a result, the request will be rejected automatically by the framework.
+
+The typical response returned by JAX-RS in such cases is:
+
+HTTP Status Code: 415 Unsupported Media Type
+
+This behavior ensures strict enforcement of API contracts and prevents invalid or improperly formatted data from being processed by the application.
+
+By restricting the accepted media type to JSON, the API achieves:
+- Consistency in data exchange format
+- Simplified parsing and validation logic
+- Improved reliability and predictability for client applications
+
+Therefore, the use of @Consumes(MediaType.APPLICATION_JSON) plays a crucial role in ensuring data integrity and enforcing correct communication between client and server.
+
+
+### Answer for Part 3 Question 2 - Query Parameter vs Path Parameter for Filtering
+
+In this implementation, sensor filtering is achieved using a query parameter:
+
+GET /api/v1/sensors?type=CO2
+
+This is implemented using the @QueryParam annotation, which allows optional filtering of a resource collection without altering the fundamental structure of the endpoint.
+
+An alternative design could use a path parameter, such as:
+
+/api/v1/sensors/type/CO2
+
+However, the query parameter approach is generally considered superior for filtering and searching operations for several reasons:
+
+1. Semantic Clarity  
+   Query parameters represent optional criteria applied to a collection, whereas path parameters typically identify a specific resource. Filtering is not identifying a new resource but narrowing down an existing collection.
+
+2. Flexibility  
+   Query parameters allow multiple filters to be combined easily:
+   /api/v1/sensors?type=CO2&status=active  
+   This would be difficult and less readable using path parameters.
+
+3. Scalability  
+   As the number of filtering options increases, query parameters provide a clean and scalable approach without complicating the URL structure.
+
+4. RESTful Best Practices  
+   REST design principles recommend using query parameters for filtering, sorting, and searching operations on collections.
+
+5. Client Usability  
+   Query parameters are easier for clients to construct dynamically and integrate into applications, especially when dealing with multiple optional conditions.
+
+Therefore, using @QueryParam for filtering aligns with RESTful design standards and provides a more flexible, scalable, and user-friendly approach compared to embedding filters within the URL path.
