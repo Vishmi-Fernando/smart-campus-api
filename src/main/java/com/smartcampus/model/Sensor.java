@@ -10,6 +10,8 @@ public class Sensor {
     private int id;
     private String type;
     private int roomId;
+    private double currentValue;
+
 
     public Sensor() {}
 
@@ -29,11 +31,19 @@ public class Sensor {
         this.type = type;
     }
 
-        public int getRoomId() {
+    public int getRoomId() {
         return roomId;
     }
 
     public void setRoomId(int roomId) {
         this.roomId = roomId;
+    }
+    
+    public double getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(double currentValue) {
+        this.currentValue = currentValue;
     }
 }

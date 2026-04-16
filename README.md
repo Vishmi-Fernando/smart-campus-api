@@ -192,3 +192,32 @@ However, the query parameter approach is generally considered superior for filte
    Query parameters are easier for clients to construct dynamically and integrate into applications, especially when dealing with multiple optional conditions.
 
 Therefore, using @QueryParam for filtering aligns with RESTful design standards and provides a more flexible, scalable, and user-friendly approach compared to embedding filters within the URL path.
+
+
+
+### Answer for Part 4 Question 1 - Sub-Resource Locator Pattern and Its Architectural Benefits
+
+In this implementation, the Sub-Resource Locator pattern is used to handle nested resources through the following structure:
+
+/api/v1/sensors/{id}/readings
+
+Instead of defining all endpoints within a single resource class, the SensorResource delegates the responsibility of handling readings to a separate class, SensorReadingResource. This is achieved through a sub-resource locator method that returns an instance of SensorReadingResource for a specific sensor.
+
+This architectural approach provides several important benefits:
+
+1. Separation of Concerns  
+   Each resource class is responsible for a specific domain. SensorResource handles sensor-related operations, while SensorReadingResource manages reading-related operations. This separation improves code clarity and maintainability.
+
+2. Improved Modularity  
+   By splitting functionality across multiple classes, the system becomes more modular. Each class can be developed, tested, and modified independently without affecting unrelated parts of the application.
+
+3. Reduced Complexity  
+   Without the sub-resource locator pattern, all nested paths such as `/sensors/{id}/readings/{rid}` would need to be handled within a single large controller class. This would lead to complex, hard-to-maintain code. Delegating logic prevents the creation of overly large and unmanageable classes.
+
+4. Scalability  
+   As the API grows, additional nested resources can be introduced easily by creating new resource classes. This makes the architecture scalable and adaptable to future requirements.
+
+5. Better Readability and Maintainability  
+   Smaller, focused classes are easier to read and debug. Developers can quickly locate relevant logic without navigating through a large monolithic controller.
+
+Overall, the Sub-Resource Locator pattern enables a clean, maintainable, and scalable API design by distributing responsibilities across specialized classes rather than centralizing all logic in a single resource.

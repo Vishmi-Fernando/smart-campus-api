@@ -6,7 +6,7 @@ package com.smartcampus;
 
 /**
  *
- * @author USER
+ * @author Vishmi
  */
 public class SmartCampusApi {
 

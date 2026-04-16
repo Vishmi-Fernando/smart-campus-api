@@ -1,14 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.smartcampus.resource;
 
 /**
  *
- * @author USER
+ * @author Vishmi
  */
-
 import com.smartcampus.model.Sensor;
 import com.smartcampus.model.Room;
 
@@ -26,13 +21,16 @@ public class SensorResource {
     private static Map<Integer, Sensor> sensors = new HashMap<>();
     private static int idCounter = 1;
 
-    //  CREATE SENSOR (POST)
+    public static Map<Integer, Sensor> getSensors() {
+        return sensors;
+    }
+
+    // CREATE SENSOR
     @POST
     public Response createSensor(Sensor sensor) {
 
         Map<Integer, Room> rooms = RoomResource.getRooms();
 
-        //  VALIDATION
         if (sensor == null || !rooms.containsKey(sensor.getRoomId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Invalid sensor or room does not exist")
@@ -47,7 +45,7 @@ public class SensorResource {
                 .build();
     }
 
-    //  GET SENSORS (WITH FILTER)
+    // GET SENSORS (WITH FILTER)
     @GET
     public Collection<Sensor> getSensors(@QueryParam("type") String type) {
 
@@ -64,5 +62,16 @@ public class SensorResource {
         }
 
         return filtered;
+    }
+
+    //  SUB-RESOURCE LOCATOR
+    @Path("/{id}/readings")
+    public SensorReadingResource getReadingResource(@PathParam("id") int id) {
+
+        if (!sensors.containsKey(id)) {
+            throw new NotFoundException("Sensor not found");
+        }
+
+        return new SensorReadingResource(id);
     }
 }
